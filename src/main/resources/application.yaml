@@ -1,0 +1,106 @@
+spring:
+  jdbc:
+    template:
+      query-timeout: 3
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: movie-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      acks: all
+      retries: 4
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  mongodb:
+    uri: mongodb://admin:admin@localhost:27017/microservices?authSource=admin
+
+  flyway:
+    url: jdbc:postgresql://localhost:5434/mydb
+    user: root
+    password: root
+    locations: classpath:/db/migration
+    baseline-on-migrate: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    generate-ddl: false
+  datasource:
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 30
+    username: root
+    password: root
+    url: jdbc:postgresql://localhost:5434/mydb
+    driver-class-name: org.postgresql.Driver
+  application:
+    name: movie-service
+  threads:
+    virtual:
+      enabled: true
+logging:
+  pattern:
+    console: %clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(line:%L) %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
+  level:
+    kafka: warn
+
+
+microservice:
+  kafka:
+    groupId: es_microservice
+    default-concurrency: 10
+    topics:
+      bank-account-event-store: bank-account-event-store
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+resilience4j:
+  timelimiter:
+    instances:
+      microservice:
+        timeout-duration:
+          seconds: 3
+        cancel-running-future: true
+  thread-pool-bulkhead:
+    instances:
+      microservice:
+        max-thread-pool-size: 20
+        core-thread-pool-size: 10
+        queue-capacity: 10
+  circuitbreaker:
+    instances:
+      microservice:
+        register-health-indicator: true
+        sliding-window-size: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: TIME_BASED
+        minimum-number-of-calls: 10
+        wait-duration-in-open-state:
+          seconds: 20
+        failure-rate-threshold: 30
+        event-consumer-buffer-size: 10
+  retry:
+    instances:
+      microservice:
+        max-attempts: 4
+        wait-duration:
+          seconds: 1
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 3

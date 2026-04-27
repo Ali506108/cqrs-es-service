@@ -1,0 +1,26 @@
+package com.saga.movie_service.domain.model;
+
+public enum Genre {
+    FICTION,
+    ACTION,
+    COMEDY,
+    DRAMA,
+    HORROR,
+    SCI_FI,
+    FANTASY,
+    THRILLER,
+    ROMANCE,
+    ANIMATION,
+    DOCUMENTARY,
+    ADVENTURE,
+    MYSTERY,
+    BIOGRAPHY,
+    HISTORY,
+    WAR,
+    MUSICAL,
+    WESTERN,
+    FAMILY,
+    SPORT,
+    CRIME,
+    SUPERHERO,
+}
