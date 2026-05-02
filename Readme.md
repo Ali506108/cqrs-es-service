@@ -1,5 +1,10 @@
 # Movie-service
 
-### goal : I want to build a project movie-service working with conccurenncy and resilience4j morevoer I want to work with CQRS pattern and Event-Sourcing
+### goal
+I want to build `movie-service` with concurrency, resilience4j, CQRS, Event Sourcing, Kafka, MongoDB, and PostgreSQL.
 
-### stack : spring boot , java 25 , spring data jpa , mongodb , postgresql , spring web, kafka
+### stack
+Spring Boot, Java 25, Spring Data JPA, MongoDB, PostgreSQL, Spring Web, Kafka.
+
+### architecture note
+Read the write-side rules and Outbox guidance in [docs/cqrs-es-outbox.md](docs/cqrs-es-outbox.md).

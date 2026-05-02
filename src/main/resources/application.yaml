@@ -3,17 +3,19 @@ spring:
     template:
       query-timeout: 3
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:9094
     consumer:
       group-id: movie-service-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.saga.movie_service.domain
     producer:
       acks: all
       retries: 4
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   mongodb:
     uri: mongodb://admin:admin@localhost:27017/microservices?authSource=admin
@@ -24,6 +26,7 @@ spring:
     password: root
     locations: classpath:/db/migration
     baseline-on-migrate: true
+    validate-on-migrate: false
   jpa:
     show-sql: true
     hibernate:
@@ -45,9 +48,10 @@ spring:
       enabled: true
 logging:
   pattern:
-    console: %clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(line:%L) %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}
+    console: "%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(line:%L) %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
   level:
     kafka: warn
+
 
 
 microservice:
@@ -104,3 +108,5 @@ resilience4j:
           seconds: 1
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 3
+server:
+  port: 9400
